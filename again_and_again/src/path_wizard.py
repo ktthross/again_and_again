@@ -3,7 +3,7 @@ from __future__ import annotations
 import pathlib
 
 
-def normalize_path(path: str | pathlib.Path, path_should_exist: bool = False) -> pathlib.Path:
+def normalize_file_path(path: str | pathlib.Path, path_should_exist: bool = False) -> pathlib.Path:
     """
     Normalize a path to a pathlib.Path object.
     """
