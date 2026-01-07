@@ -3,7 +3,7 @@ name = "again-and-again"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
@@ -15,8 +15,8 @@ dev = [
 [tool.ruff]
 # Set the maximum line length to 100
 line-length = 100
-# Target Python 3.11+
-target-version = "py311"
+# Target Python 3.10+
+target-version = "py310"
 
 # Enable auto-fixing where possible
 fix = true
