@@ -1,10 +1,11 @@
 import pathlib
 
+
 def normalize_path(path: str | pathlib.Path, path_should_exist: bool = False) -> pathlib.Path:
     """
     Normalize a path to a pathlib.Path object.
     """
-    if not isinstance(path, (str, pathlib.Path)):
+    if not isinstance(path, str | pathlib.Path):
         raise TypeError(f"Expected str or pathlib.Path, got {type(path)}")
 
     normalized_path = pathlib.Path(path).resolve()
