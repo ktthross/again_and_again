@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "updatedAt": "2026-01-08T20:02:36.958Z",
+  "exclusions": [
+    ".git",
+    "logs",
+    "bin",
+    ".vscode",
+    "__pycache__"
+  ]
+}
