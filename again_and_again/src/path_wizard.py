@@ -21,3 +21,18 @@ def normalize_file_path(
         raise FileNotFoundError(f"Path {normalized_path} does not exist")
 
     return normalized_path
+
+
+def normalize_directory_path(path: str | pathlib.Path, make_path: bool = True) -> pathlib.Path:
+    """
+    Normalize a path to a pathlib.Path object.
+    """
+    if not isinstance(path, str | pathlib.Path):
+        raise TypeError(f"Expected str or pathlib.Path, got {type(path)}")
+
+    normalized_path = pathlib.Path(path).resolve()
+
+    if make_path:
+        normalized_path.mkdir(parents=True, exist_ok=True)
+
+    return normalized_path
