@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import pathlib
+from datetime import datetime
+
+from again_and_again.src.git_wizard import get_commit_hash, get_git_repo_root_path
 
 
 def normalize_file_path(
@@ -45,3 +48,22 @@ def path_to_string(source: str | pathlib.Path) -> str:
     if isinstance(source, pathlib.Path):
         return str(source.resolve())
     return source
+
+
+def create_unique_path_inside_of_a_git_repo(
+    output_namespace: str | pathlib.Path | None = None,
+) -> pathlib.Path:
+    """
+    Create a unique path inside of a git repository using an output namespace from the git root,
+    the current timestamp, and the current commit hash.
+    """
+
+    if output_namespace is None:
+        output_namespace = "outputs"
+
+    timestamp = datetime.now().strftime("%Y-%m-%d/%H-%M-%S")
+
+    return normalize_directory_path(
+        get_git_repo_root_path() / output_namespace / timestamp / f"{get_commit_hash()}",
+        make_path=True,
+    )
