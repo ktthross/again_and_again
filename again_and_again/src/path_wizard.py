@@ -36,3 +36,12 @@ def normalize_directory_path(path: str | pathlib.Path, make_path: bool = True) -
         normalized_path.mkdir(parents=True, exist_ok=True)
 
     return normalized_path
+
+
+def path_to_string(source: str | pathlib.Path) -> str:
+    """
+    Convert any type of path to a string
+    """
+    if isinstance(source, pathlib.Path):
+        return str(source.resolve())
+    return source
