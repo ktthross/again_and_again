@@ -1,6 +1,6 @@
 [project]
 name = "again-and-again"
-version = "0.7.0"
+version = "0.7.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -10,6 +10,9 @@ dependencies = []
 dev = [
     "ruff>=0.8.0",
     "pre-commit>=4.0.0",
+]
+torch = [
+    "torch>=2.10.0",
 ]
 
 [tool.ruff]
