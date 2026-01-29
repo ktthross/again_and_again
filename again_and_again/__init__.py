@@ -1,5 +1,7 @@
 """again-and-again: Personal utility library for things I do again and again."""
 
+from importlib.metadata import version
+
 from again_and_again.src.git_wizard import get_commit_hash, get_git_repo_root_path
 from again_and_again.src.gpu_wizard import get_device
 from again_and_again.src.path_wizard import (
@@ -9,7 +11,10 @@ from again_and_again.src.path_wizard import (
     path_to_string,
 )
 
+__version__ = version("again-and-again")
+
 __all__ = [
+    "__version__",
     "normalize_file_path",
     "normalize_directory_path",
     "get_git_repo_root_path",
