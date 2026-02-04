@@ -8,7 +8,7 @@ except ImportError:
     TORCH_AVAILABLE = False
 
 
-def get_device(override: Literal["cpu", "cuda", "mps"] | None = None) -> str:
+def get_device(override: Literal["cpu", "cuda", "mps"] | None = None) -> torch.device:
     """
     Get the device to use for GPU operations.
     """
