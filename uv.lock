@@ -10,7 +10,7 @@ resolution-markers = [
 [[package]]
 name = "again-and-again"
 version = "0.7.3"
-source = { virtual = "." }
+source = { editable = "." }
 
 [package.optional-dependencies]
 dev = [

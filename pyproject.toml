@@ -1,3 +1,13 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+# Use PyPI as the default index (overrides any global config)
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+default = true
+
 [project]
 name = "again-and-again"
 version = "0.7.3"
