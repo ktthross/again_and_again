@@ -39,11 +39,11 @@ def normalize_file_path(
 
     normalized_path = pathlib.Path(path).resolve()
 
-    if make_parent_path:
-        normalized_path.parent.mkdir(parents=True, exist_ok=True)
-
     if path_should_exist and not normalized_path.exists():
         raise FileNotFoundError(f"Path {normalized_path} does not exist")
+
+    if make_parent_path:
+        normalized_path.parent.mkdir(parents=True, exist_ok=True)
 
     return normalized_path
 

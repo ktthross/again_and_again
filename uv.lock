@@ -41,7 +41,7 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.0.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.8.0" },
-    { name = "torch", marker = "extra == 'torch'", specifier = ">=2.10.0" },
+    { name = "torch", marker = "extra == 'torch'", specifier = ">=2.0.0" },
 ]
 provides-extras = ["dev", "torch", "hydra", "logging"]
 

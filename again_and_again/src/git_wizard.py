@@ -44,5 +44,5 @@ def get_commit_hash() -> str:
             .decode("utf-8")
             .strip()
         )
-    except subprocess.CalledProcessError as e:
+    except (subprocess.CalledProcessError, FileNotFoundError) as e:
         raise RuntimeError("Not in a git repository or git is not installed") from e
