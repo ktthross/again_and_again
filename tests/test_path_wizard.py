@@ -152,3 +152,23 @@ class TestCreateUniquePathInsideOfAGitRepo:
         assert re.search(r"\d{4}-\d{2}-\d{2}", str(result))
         # Check for time pattern in path
         assert re.search(r"\d{2}-\d{2}-\d{2}", str(result))
+
+    def test_rejects_path_traversal_with_parent_dirs(self) -> None:
+        """Should reject output_namespace that tries to escape git repo with '..'."""
+        import pytest
+
+        with pytest.raises(ValueError, match="outside the git repository root"):
+            create_unique_path_inside_of_a_git_repo(output_namespace="../../etc")
+
+    def test_rejects_absolute_paths(self) -> None:
+        """Should reject absolute paths as output_namespace."""
+        import pytest
+
+        with pytest.raises(ValueError, match="outside the git repository root"):
+            create_unique_path_inside_of_a_git_repo(output_namespace="/tmp/malicious")
+
+    def test_allows_nested_relative_paths(self) -> None:
+        """Should allow nested relative paths that stay within the repo."""
+        result = create_unique_path_inside_of_a_git_repo(output_namespace="data/experiments")
+        assert "data" in str(result)
+        assert "experiments" in str(result)

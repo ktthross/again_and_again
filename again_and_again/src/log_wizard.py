@@ -6,12 +6,10 @@ import logging
 import sys
 from typing import TYPE_CHECKING
 
-import again_and_again as aaa
+from again_and_again.src.path_wizard import normalize_file_path
 
 if TYPE_CHECKING:
     import pathlib
-
-    pass
 
 try:
     from loguru import logger
@@ -44,7 +42,12 @@ class InterceptHandler(logging.Handler):
             level = record.levelno
 
         # Find caller from where the logged message originated
-        frame, depth = sys._getframe(6), 6  # noqa: SLF001
+        try:
+            frame, depth = sys._getframe(6), 6  # noqa: SLF001
+        except ValueError:
+            # Stack is too shallow, fall back to a smaller depth
+            frame, depth = sys._getframe(1), 1  # noqa: SLF001
+
         while frame and frame.f_code.co_filename == logging.__file__:
             if frame.f_back is None:
                 break
@@ -110,7 +113,7 @@ def logging_setup(
 
     # Normalize the log file path
     if log_file is not None:
-        log_file_path = aaa.normalize_file_path(
+        log_file_path = normalize_file_path(
             log_file, path_should_exist=False, make_parent_path=True
         )
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 import pathlib
 from typing import TYPE_CHECKING, Any
 
-import again_and_again as aaa
+from again_and_again.src.git_wizard import get_git_repo_root_path
 
 if TYPE_CHECKING:
     import hydra
@@ -27,7 +27,7 @@ def get_the_hydra_config_path() -> pathlib.Path:
     Returns:
         Path to the conf directory in the git repository root.
     """
-    return pathlib.Path(aaa.get_git_repo_root_path() / "conf")
+    return pathlib.Path(get_git_repo_root_path() / "conf")
 
 
 def load_hydra_config(
