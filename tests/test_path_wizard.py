@@ -114,28 +114,28 @@ class TestPathToString:
 class TestCreateUniquePathInsideOfAGitRepo:
     """Tests for create_unique_path_inside_of_a_git_repo function."""
 
-    def test_returns_path_object(self) -> None:
+    def test_returns_path_object(self, fake_git_repo: pathlib.Path) -> None:
         """Should return a pathlib.Path object."""
         result = create_unique_path_inside_of_a_git_repo()
         assert isinstance(result, pathlib.Path)
 
-    def test_creates_directory(self) -> None:
+    def test_creates_directory(self, fake_git_repo: pathlib.Path) -> None:
         """Should create the directory."""
         result = create_unique_path_inside_of_a_git_repo()
         assert result.exists()
         assert result.is_dir()
 
-    def test_uses_default_namespace(self) -> None:
+    def test_uses_default_namespace(self, fake_git_repo: pathlib.Path) -> None:
         """Should use 'outputs' as default namespace."""
         result = create_unique_path_inside_of_a_git_repo()
         assert "outputs" in str(result)
 
-    def test_uses_custom_namespace(self) -> None:
+    def test_uses_custom_namespace(self, fake_git_repo: pathlib.Path) -> None:
         """Should use custom namespace when provided."""
         result = create_unique_path_inside_of_a_git_repo(output_namespace="custom_outputs")
         assert "custom_outputs" in str(result)
 
-    def test_contains_commit_hash(self) -> None:
+    def test_contains_commit_hash(self, fake_git_repo: pathlib.Path) -> None:
         """Should contain the current commit hash in the path."""
         from again_and_again import get_commit_hash
 
@@ -143,7 +143,7 @@ class TestCreateUniquePathInsideOfAGitRepo:
         commit_hash = get_commit_hash()
         assert commit_hash in str(result)
 
-    def test_contains_timestamp_format(self) -> None:
+    def test_contains_timestamp_format(self, fake_git_repo: pathlib.Path) -> None:
         """Should contain a timestamp in YYYY-MM-DD/HH-MM-SS format."""
         import re
 
@@ -152,3 +152,25 @@ class TestCreateUniquePathInsideOfAGitRepo:
         assert re.search(r"\d{4}-\d{2}-\d{2}", str(result))
         # Check for time pattern in path
         assert re.search(r"\d{2}-\d{2}-\d{2}", str(result))
+
+    def test_rejects_path_traversal_with_parent_dirs(self, fake_git_repo: pathlib.Path) -> None:
+        """Should reject output_namespace that tries to escape git repo with '..'."""
+        with pytest.raises(ValueError, match="outside the git repository root"):
+            create_unique_path_inside_of_a_git_repo(output_namespace="../../etc")
+
+    def test_rejects_absolute_paths(self, fake_git_repo: pathlib.Path) -> None:
+        """Should reject absolute paths as output_namespace."""
+        with pytest.raises(ValueError, match="outside the git repository root"):
+            create_unique_path_inside_of_a_git_repo(output_namespace="/tmp/malicious")
+
+    def test_allows_nested_relative_paths(self, fake_git_repo: pathlib.Path) -> None:
+        """Should allow nested relative paths that stay within the repo."""
+        result = create_unique_path_inside_of_a_git_repo(output_namespace="data/experiments")
+        assert "data" in str(result)
+        assert "experiments" in str(result)
+
+    def test_path_is_inside_fake_repo(self, fake_git_repo: pathlib.Path) -> None:
+        """Should create paths inside the fake git repository."""
+        result = create_unique_path_inside_of_a_git_repo()
+        # Verify the created path is inside the fake repo
+        assert result.is_relative_to(fake_git_repo)

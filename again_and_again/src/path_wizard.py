@@ -39,11 +39,11 @@ def normalize_file_path(
 
     normalized_path = pathlib.Path(path).resolve()
 
-    if make_parent_path:
-        normalized_path.parent.mkdir(parents=True, exist_ok=True)
-
     if path_should_exist and not normalized_path.exists():
         raise FileNotFoundError(f"Path {normalized_path} does not exist")
+
+    if make_parent_path:
+        normalized_path.parent.mkdir(parents=True, exist_ok=True)
 
     return normalized_path
 
@@ -115,7 +115,8 @@ def create_unique_path_inside_of_a_git_repo(
 
     Args:
         output_namespace: Subdirectory from git root for outputs.
-            Defaults to "outputs".
+            Defaults to "outputs". Must be a relative path that stays within
+            the git repository (no "..", no absolute paths).
 
     Returns:
         A pathlib.Path to the created unique directory.
@@ -123,6 +124,7 @@ def create_unique_path_inside_of_a_git_repo(
     Raises:
         FileNotFoundError: If not in a git repository.
         RuntimeError: If unable to get the current commit hash.
+        ValueError: If output_namespace tries to escape the git repository.
 
     Note:
         The timestamp uses local time (not UTC). This is intentional for
@@ -138,9 +140,26 @@ def create_unique_path_inside_of_a_git_repo(
     if output_namespace is None:
         output_namespace = "outputs"
 
+    # Get the git repo root for validation
+    git_root = get_git_repo_root_path()
+
+    # Resolve the namespace path and check it stays within git root
+    namespace_path = (git_root / output_namespace).resolve()
+
+    # Security check: ensure the resolved path is inside the git repo
+    try:
+        namespace_path.relative_to(git_root)
+    except ValueError as e:
+        msg = (
+            f"Invalid output_namespace: '{output_namespace}' would create "
+            f"directories outside the git repository root ({git_root}). "
+            "Use relative paths without '..' to stay within the repository."
+        )
+        raise ValueError(msg) from e
+
     timestamp = datetime.now().strftime("%Y-%m-%d/%H-%M-%S")
 
     return normalize_directory_path(
-        get_git_repo_root_path() / output_namespace / timestamp / f"{get_commit_hash()}",
+        namespace_path / timestamp / f"{get_commit_hash()}",
         make_path=True,
     )

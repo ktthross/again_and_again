@@ -12,10 +12,17 @@ A personal utility library for things I do again and again.
 pip install again-and-again
 ```
 
-For GPU device detection (requires PyTorch):
+For optional features:
 
 ```bash
+# GPU device detection (requires PyTorch)
 pip install again-and-again[torch]
+
+# Hydra configuration utilities
+pip install again-and-again[hydra]
+
+# Logging setup with loguru
+pip install again-and-again[logging]
 ```
 
 ## Features
@@ -98,10 +105,60 @@ device = get_device(override="cuda")
 device = get_device(override="mps")
 ```
 
+### Logging Utilities
+
+Set up structured logging with loguru:
+
+```python
+from again_and_again import logging_setup
+from loguru import logger
+
+# Set up logging to stdout and a file
+logging_setup("logs/app.log", log_level="DEBUG")
+
+# Automatically intercepts torch and hydra logging
+logger.info("Application started")
+
+# Intercept specific loggers
+logging_setup(
+    "logs/app.log",
+    intercept_loggers=["torch", "transformers", "matplotlib"]
+)
+
+# Intercept all standard logging
+logging_setup("logs/app.log", intercept_loggers=[])
+```
+
+### Hydra Configuration Utilities
+
+Load Hydra configurations:
+
+```python
+from again_and_again import load_hydra_config, get_the_hydra_config_path
+
+# Get the config directory path
+config_path = get_the_hydra_config_path()  # Returns {repo_root}/conf
+
+# Load a Hydra config as a dictionary
+config = load_hydra_config("train_config")
+
+# Load with overrides
+config = load_hydra_config(
+    "train_config",
+    overrides=["batch_size=32", "learning_rate=0.001"]
+)
+
+# Load from custom directory
+config = load_hydra_config(
+    "my_config",
+    config_dir="/path/to/configs"
+)
+```
+
 ## API Reference
 
 | Function | Description |
-|----------|-------------|
+| -------- | ----------- |
 | `normalize_file_path(path, path_should_exist=False, make_parent_path=True)` | Normalize and resolve a file path |
 | `normalize_directory_path(path, make_path=True)` | Normalize and resolve a directory path |
 | `path_to_string(source)` | Convert a Path to string |
@@ -109,6 +166,10 @@ device = get_device(override="mps")
 | `get_commit_hash()` | Get current HEAD commit hash |
 | `create_unique_path_inside_of_a_git_repo(output_namespace=None)` | Create timestamped output directory |
 | `get_device(override=None)` | Get optimal PyTorch device |
+| `logging_setup(log_file, log_level, intercept_standard_logging, intercept_loggers)` | Configure loguru logging |
+| `reset_logging()` | Reset logging configuration |
+| `get_the_hydra_config_path()` | Get path to Hydra config directory |
+| `load_hydra_config(config_name, overrides, config_dir)` | Load Hydra config as dictionary |
 
 ## Development
 
