@@ -32,7 +32,7 @@ def get_device(override: Literal["cpu", "cuda", "mps"] | None = None) -> torch.d
 
     Raises:
         ImportError: If PyTorch is not installed. Install with
-            `pip install again-and-again[torch]`.
+            `uv add again-and-again[torch]` or `pip install again-and-again[torch]`.
         ValueError: If override is not a valid device name.
 
     Example:
@@ -41,7 +41,8 @@ def get_device(override: Literal["cpu", "cuda", "mps"] | None = None) -> torch.d
     """
     if not TORCH_AVAILABLE:
         raise ImportError(
-            "torch is not available. Install with `pip install again-and-again[torch]`"
+            "torch is not available. Install with `uv add again-and-again[torch]`"
+            " or `pip install again-and-again[torch]`"
         )
     if override is not None and override not in ["cpu", "cuda", "mps"]:
         raise ValueError(f"Invalid device: {override}")

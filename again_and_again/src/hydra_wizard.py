@@ -52,7 +52,7 @@ def get_the_hydra_config_path() -> pathlib.Path:
 
 
 def load_hydra_config(
-    config_name: str | None,
+    config_name: str | None = None,
     overrides: list[str] | None = None,
     config_dir: pathlib.Path | str | None = None,
     argv: list[str] | None = None,
@@ -76,7 +76,7 @@ def load_hydra_config(
 
     Raises:
         ImportError: If Hydra is not installed. Install with
-            `uv add again-and-again[hydra]`.
+            `uv add again-and-again[hydra]` or `pip install again-and-again[hydra]`.
         TypeError: If OmegaConf.to_container doesn't return a dict.
 
     Example:
@@ -87,7 +87,8 @@ def load_hydra_config(
     """
     if not HYDRA_AVAILABLE:
         raise ImportError(
-            "hydra-core is not available. Install with `uv add again-and-again[hydra]`"
+            "hydra-core is not available. Install with "
+            "`uv add again-and-again[hydra]` or `pip install again-and-again[hydra]`"
         )
 
     cli_config_name: str | None = None
@@ -97,6 +98,8 @@ def load_hydra_config(
         cli_config_name, cli_overrides, cli_config_dir = _parse_hydra_argv(argv)
 
     resolved_config_name = config_name or cli_config_name
+    if resolved_config_name is None:
+        raise ValueError("config_name is required")
     resolved_overrides = cli_overrides + (overrides or [])
     resolved_config_dir = config_dir or (pathlib.Path(cli_config_dir) if cli_config_dir else None)
 

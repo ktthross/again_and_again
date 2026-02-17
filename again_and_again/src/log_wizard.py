@@ -86,7 +86,7 @@ def logging_setup(
 
     Raises:
         ImportError: If loguru is not installed. Install with
-            `pip install again-and-again[logging]`.
+            `uv add again-and-again[logging]` or `pip install again-and-again[logging]`.
 
     Example:
         >>> from again_and_again import logging_setup
@@ -102,7 +102,8 @@ def logging_setup(
     """
     if not LOGURU_AVAILABLE:
         raise ImportError(
-            "loguru is not available. Install with `pip install again-and-again[logging]`"
+            "loguru is not available. Install with `uv add again-and-again[logging]`"
+            " or `pip install again-and-again[logging]`"
         )
 
     global _LOGGING_CONFIGURED  # noqa: PLW0603
@@ -208,11 +209,12 @@ def reset_logging() -> None:
 
     Raises:
         ImportError: If loguru is not installed. Install with
-            `pip install again-and-again[logging]`.
+            `uv add again-and-again[logging]` or `pip install again-and-again[logging]`.
     """
     if not LOGURU_AVAILABLE:
         raise ImportError(
-            "loguru is not available. Install with `pip install again-and-again[logging]`"
+            "loguru is not available. Install with `uv add again-and-again[logging]`"
+            " or `pip install again-and-again[logging]`"
         )
 
     global _LOGGING_CONFIGURED  # noqa: PLW0603
