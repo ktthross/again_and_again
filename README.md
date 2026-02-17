@@ -9,6 +9,10 @@ A personal utility library for things I do again and again.
 ## Installation
 
 ```bash
+# Using uv (recommended)
+uv add again-and-again
+
+# Using pip
 pip install again-and-again
 ```
 
@@ -16,13 +20,16 @@ For optional features:
 
 ```bash
 # GPU device detection (requires PyTorch)
-pip install again-and-again[torch]
+uv add again-and-again[torch]
+# pip install again-and-again[torch]
 
 # Hydra configuration utilities
-pip install again-and-again[hydra]
+uv add again-and-again[hydra]
+# pip install again-and-again[hydra]
 
 # Logging setup with loguru
-pip install again-and-again[logging]
+uv add again-and-again[logging]
+# pip install again-and-again[logging]
 ```
 
 ## Features
@@ -179,19 +186,24 @@ git clone https://github.com/ktthross/again_and_again.git
 cd again_and_again
 
 # Install with dev dependencies
-pip install -e ".[dev]"
+uv sync --extra dev
+# pip install -e ".[dev]"
 
 # Run tests
-pytest
+uv run pytest
+# pytest
 
 # Run linter
-ruff check .
+uv run ruff check .
+# ruff check .
 
 # Run formatter
-ruff format .
+uv run ruff format .
+# ruff format .
 
 # Run type checker
-mypy again_and_again
+uv run mypy again_and_again
+# mypy again_and_again
 ```
 
 ## License
