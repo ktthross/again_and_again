@@ -10,7 +10,7 @@ default = true
 
 [project]
 name = "again-and-again"
-version = "0.8.1"
+version = "0.9.0"
 description = "This is code I write again and again."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -27,6 +27,7 @@ dev = [
 torch = ["torch>=2.0.0"]
 hydra = ["hydra-core>=1.3.0", "omegaconf>=2.3.0"]
 logging = ["loguru>=0.7.0"]
+mlflow = ["mlflow>=2.0.0", "python-dotenv>=1.0.0"]
 
 [tool.ruff]
 # Set the maximum line length to 100

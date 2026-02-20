@@ -175,6 +175,7 @@ def logging_setup(
 
     # Silence noisy third-party loggers
     noisy_loggers = [
+        "alembic.runtime.migration",
         "databricks.sdk",
         "urllib3",
         "urllib3.connectionpool",
