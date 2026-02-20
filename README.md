@@ -30,6 +30,10 @@ uv add again-and-again[hydra]
 # Logging setup with loguru
 uv add again-and-again[logging]
 # pip install again-and-again[logging]
+
+# MLflow + Databricks utilities
+uv add ts-hadean-zircon[mlflow]
+# pip install ts-hadean-zircon[mlflow]
 ```
 
 ## Features
@@ -162,6 +166,46 @@ config = load_hydra_config(
 )
 ```
 
+### MLflow Utilities
+
+Load MLflow/Databricks environment variables from a `.env` file:
+
+```python
+from ts_hadean_zircon import load_mlflow_env
+
+# Load from default location
+env = load_mlflow_env()
+
+# Load from a specific path
+env = load_mlflow_env(".env.databricks")
+# Returns dict with keys: DATABRICKS_HOST, DATABRICKS_TOKEN,
+#                         MLFLOW_TRACKING_URI, MLFLOW_EXPERIMENT_ID
+```
+
+**Test connectivity** to a Databricks MLflow tracking server:
+
+```python
+from ts_hadean_zircon import can_connect_to_databricks
+
+# Uses MLFLOW_TRACKING_URI env var
+connected = can_connect_to_databricks()
+
+# Or provide the URI directly
+connected = can_connect_to_databricks(tracking_uri="https://my-workspace.azuredatabricks.net")
+```
+
+**Check whether an MLflow experiment exists**:
+
+```python
+from ts_hadean_zircon import experiment_exists
+
+# Look up by name
+exists = experiment_exists(experiment_name="my-experiment")
+
+# Look up by ID
+exists = experiment_exists(experiment_id="123456789")
+```
+
 ## API Reference
 
 | Function | Description |
@@ -177,6 +221,9 @@ config = load_hydra_config(
 | `reset_logging()` | Reset logging configuration |
 | `get_the_hydra_config_path()` | Get path to Hydra config directory |
 | `load_hydra_config(config_name, overrides, config_dir)` | Load Hydra config as dictionary |
+| `load_mlflow_env(dotenv_path=None)` | Load MLflow/Databricks env vars from a .env file |
+| `can_connect_to_databricks(tracking_uri=None)` | Test connectivity to a Databricks MLflow server |
+| `experiment_exists(experiment_name=None, experiment_id=None)` | Check whether an MLflow experiment exists |
 
 ## Development
 
