@@ -2,6 +2,7 @@
 
 from importlib.metadata import version
 
+from again_and_again.src.databricks_wizard import get_spark
 from again_and_again.src.git_wizard import get_commit_hash, get_git_repo_root_path
 from again_and_again.src.gpu_wizard import get_device
 from again_and_again.src.hydra_wizard import get_the_hydra_config_path, load_hydra_config
@@ -33,6 +34,7 @@ __all__ = [
     "load_hydra_config",
     "logging_setup",
     "reset_logging",
+    "get_spark",
     "can_connect_to_databricks",
     "experiment_exists",
     "load_mlflow_env",
