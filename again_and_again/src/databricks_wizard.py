@@ -12,7 +12,7 @@ try:
     from databricks.connect import DatabricksSession
 
     DATABRICKS_AVAILABLE = True
-except ImportError:
+except ModuleNotFoundError:
     DATABRICKS_AVAILABLE = False
 
 
@@ -29,7 +29,7 @@ def get_spark() -> SparkSession:
         A spark session.
 
     Raises:
-        ImportError: If databricks-connect is not installed. Install with
+        ModuleNotFoundError: If databricks-connect is not installed. Install with
             `uv add ts-hadean-zircon[databricks]` or `pip install ts-hadean-zircon[databricks]`.
     """
     if os.environ.get("DATABRICKS_RUNTIME_VERSION"):
@@ -39,7 +39,7 @@ def get_spark() -> SparkSession:
         return SparkSession.builder.getOrCreate()
 
     if not DATABRICKS_AVAILABLE:
-        raise ImportError(
+        raise ModuleNotFoundError(
             "databricks-connect is not available. Install with"
             " `uv add ts-hadean-zircon[databricks]`"
             " or `pip install ts-hadean-zircon[databricks]`"

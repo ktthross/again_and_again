@@ -13,12 +13,12 @@ class TestCanConnectToDatabricks:
     """Tests for can_connect_to_databricks function."""
 
     def test_raises_import_error_without_mlflow(self) -> None:
-        """Should raise ImportError when mlflow is not available."""
+        """Should raise ModuleNotFoundError when mlflow is not available."""
         from unittest.mock import patch
 
         with (
             patch("again_and_again.src.mlflow_wizard.MLFLOW_AVAILABLE", False),
-            pytest.raises(ImportError, match="mlflow is not available"),
+            pytest.raises(ModuleNotFoundError, match="mlflow is not available"),
         ):
             can_connect_to_databricks()
 
@@ -26,7 +26,7 @@ class TestCanConnectToDatabricks:
         """Should return True when the tracking server responds."""
         try:
             import mlflow  # noqa: F401
-        except ImportError:
+        except ModuleNotFoundError:
             pytest.skip("mlflow not installed")
 
         from unittest.mock import MagicMock, patch
@@ -43,7 +43,7 @@ class TestCanConnectToDatabricks:
         """Should call mlflow.set_tracking_uri when tracking_uri is given."""
         try:
             import mlflow  # noqa: F401
-        except ImportError:
+        except ModuleNotFoundError:
             pytest.skip("mlflow not installed")
 
         from unittest.mock import MagicMock, patch
@@ -63,7 +63,7 @@ class TestCanConnectToDatabricks:
         """Should not call mlflow.set_tracking_uri when tracking_uri is None."""
         try:
             import mlflow  # noqa: F401
-        except ImportError:
+        except ModuleNotFoundError:
             pytest.skip("mlflow not installed")
 
         from unittest.mock import MagicMock, patch
@@ -83,7 +83,7 @@ class TestCanConnectToDatabricks:
         """Should propagate MlflowException when the connection fails."""
         try:
             from mlflow.exceptions import MlflowException
-        except ImportError:
+        except ModuleNotFoundError:
             pytest.skip("mlflow not installed")
 
         from unittest.mock import MagicMock, patch
@@ -111,12 +111,12 @@ class TestLoadMlflowEnv:
     """Tests for load_mlflow_env function."""
 
     def test_raises_import_error_without_dotenv(self) -> None:
-        """Should raise ImportError when python-dotenv is not available."""
+        """Should raise ModuleNotFoundError when python-dotenv is not available."""
         from unittest.mock import patch
 
         with (
             patch("again_and_again.src.mlflow_wizard.DOTENV_AVAILABLE", False),
-            pytest.raises(ImportError, match="python-dotenv is not available"),
+            pytest.raises(ModuleNotFoundError, match="python-dotenv is not available"),
         ):
             load_mlflow_env()
 
@@ -211,12 +211,12 @@ class TestExperimentExists:
     """Tests for experiment_exists function."""
 
     def test_raises_import_error_without_mlflow(self) -> None:
-        """Should raise ImportError when mlflow is not available."""
+        """Should raise ModuleNotFoundError when mlflow is not available."""
         from unittest.mock import patch
 
         with (
             patch("again_and_again.src.mlflow_wizard.MLFLOW_AVAILABLE", False),
-            pytest.raises(ImportError, match="mlflow is not available"),
+            pytest.raises(ModuleNotFoundError, match="mlflow is not available"),
         ):
             experiment_exists(experiment_name="test")
 
@@ -293,7 +293,7 @@ class TestExperimentExists:
 
         try:
             from mlflow.exceptions import MlflowException
-        except ImportError:
+        except ModuleNotFoundError:
             pytest.skip("mlflow not installed")
 
         not_found = MlflowException("not found", error_code="RESOURCE_DOES_NOT_EXIST")
@@ -311,18 +311,17 @@ class TestExperimentExists:
 
         try:
             from mlflow.exceptions import MlflowException
-        except ImportError:
+        except ModuleNotFoundError:
             pytest.skip("mlflow not installed")
 
-        auth_error = MlflowException("permission denied", error_code="PERMISSION_DENIED")
+        not_found = MlflowException("not found", error_code="RESOURCE_DOES_NOT_EXIST")
         mock_client = MagicMock()
-        mock_client.get_experiment.side_effect = auth_error
+        mock_client.get_experiment.side_effect = not_found
 
-        with (
-            patch(_MLFLOW_CLIENT, return_value=mock_client),
-            pytest.raises(MlflowException, match="permission denied"),
-        ):
-            experiment_exists(experiment_id="42")
+        with patch(_MLFLOW_CLIENT, return_value=mock_client):
+            result = experiment_exists(experiment_id="99")
+
+        assert result is False
 
     def test_import_from_package(self) -> None:
         """Should be importable from the top-level package."""

@@ -227,7 +227,7 @@ Access the package version at runtime:
 ```python
 import again_and_again
 
-print(again_and_again.__version__)  # e.g., "0.7.2"
+print(again_and_again.__version__)  # e.g., "X.Y.Z"
 ```
 
 ## API Reference

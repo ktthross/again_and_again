@@ -16,14 +16,14 @@ class TestGetSpark:
     """Tests for get_spark function."""
 
     def test_raises_import_error_without_databricks_connect(self) -> None:
-        """Should raise ImportError when databricks-connect is not available
+        """Should raise ModuleNotFoundError when databricks-connect is not available
         and not in a notebook.
         """
         env = {k: v for k, v in os.environ.items() if k != "DATABRICKS_RUNTIME_VERSION"}
         with (
             patch.dict("os.environ", env, clear=True),
             patch(_DATABRICKS_AVAILABLE, False),
-            pytest.raises(ImportError, match="databricks-connect is not available"),
+            pytest.raises(ModuleNotFoundError, match="databricks-connect is not available"),
         ):
             get_spark()
 
@@ -31,7 +31,7 @@ class TestGetSpark:
         """Should call DatabricksSession.builder.getOrCreate() for local dev (not in a notebook)."""
         try:
             from databricks.connect import DatabricksSession  # noqa: F401
-        except ImportError:
+        except ModuleNotFoundError:
             pytest.skip("databricks-connect not installed")
 
         mock_session = MagicMock()

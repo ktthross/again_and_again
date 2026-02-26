@@ -11,7 +11,7 @@ try:
     import torch
 
     TORCH_AVAILABLE = True
-except ImportError:
+except ModuleNotFoundError:
     TORCH_AVAILABLE = False
 
 
@@ -31,7 +31,7 @@ def get_device(override: Literal["cpu", "cuda", "mps"] | None = None) -> torch.d
         A torch.device object representing the selected compute device.
 
     Raises:
-        ImportError: If PyTorch is not installed. Install with
+        ModuleNotFoundError: If PyTorch is not installed. Install with
             `uv add again-and-again[torch]` or `pip install again-and-again[torch]`.
         ValueError: If override is not a valid device name.
 
@@ -40,7 +40,7 @@ def get_device(override: Literal["cpu", "cuda", "mps"] | None = None) -> torch.d
         >>> device = get_device(override="cpu")  # Force CPU
     """
     if not TORCH_AVAILABLE:
-        raise ImportError(
+        raise ModuleNotFoundError(
             "torch is not available. Install with `uv add again-and-again[torch]`"
             " or `pip install again-and-again[torch]`"
         )
