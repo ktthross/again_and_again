@@ -15,7 +15,7 @@ try:
     from loguru import logger
 
     LOGURU_AVAILABLE = True
-except ImportError:
+except ModuleNotFoundError:
     LOGURU_AVAILABLE = False
     logger = None  # type: ignore[assignment]
 
@@ -85,7 +85,7 @@ def logging_setup(
             "PIL" (Pillow).
 
     Raises:
-        ImportError: If loguru is not installed. Install with
+        ModuleNotFoundError: If loguru is not installed. Install with
             `uv add again-and-again[logging]` or `pip install again-and-again[logging]`.
 
     Example:
@@ -101,7 +101,7 @@ def logging_setup(
         >>> logger.info("This will log to both stdout and logs/app.log")
     """
     if not LOGURU_AVAILABLE:
-        raise ImportError(
+        raise ModuleNotFoundError(
             "loguru is not available. Install with `uv add again-and-again[logging]`"
             " or `pip install again-and-again[logging]`"
         )
@@ -209,11 +209,11 @@ def reset_logging() -> None:
     logging after it has been set up.
 
     Raises:
-        ImportError: If loguru is not installed. Install with
+        ModuleNotFoundError: If loguru is not installed. Install with
             `uv add again-and-again[logging]` or `pip install again-and-again[logging]`.
     """
     if not LOGURU_AVAILABLE:
-        raise ImportError(
+        raise ModuleNotFoundError(
             "loguru is not available. Install with `uv add again-and-again[logging]`"
             " or `pip install again-and-again[logging]`"
         )

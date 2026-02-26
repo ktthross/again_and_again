@@ -17,7 +17,7 @@ try:
     from omegaconf import DictConfig, OmegaConf
 
     HYDRA_AVAILABLE = True
-except ImportError:
+except ModuleNotFoundError:
     HYDRA_AVAILABLE = False
 
 
@@ -75,7 +75,7 @@ def load_hydra_config(
         Dictionary containing the resolved configuration.
 
     Raises:
-        ImportError: If Hydra is not installed. Install with
+        ModuleNotFoundError: If Hydra is not installed. Install with
             `uv add again-and-again[hydra]` or `pip install again-and-again[hydra]`.
         TypeError: If OmegaConf.to_container doesn't return a dict.
 
@@ -86,7 +86,7 @@ def load_hydra_config(
         >>> config = load_hydra_config(argv=sys.argv[1:])
     """
     if not HYDRA_AVAILABLE:
-        raise ImportError(
+        raise ModuleNotFoundError(
             "hydra-core is not available. Install with "
             "`uv add again-and-again[hydra]` or `pip install again-and-again[hydra]`"
         )

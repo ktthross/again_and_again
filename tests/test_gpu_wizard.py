@@ -16,7 +16,7 @@ class TestGetDevice:
 
             result = get_device()
             assert isinstance(result, torch.device)
-        except ImportError:
+        except ModuleNotFoundError:
             pytest.skip("torch not installed")
 
     def test_override_cpu(self) -> None:
@@ -26,7 +26,7 @@ class TestGetDevice:
 
             result = get_device(override="cpu")
             assert result == torch.device("cpu")
-        except ImportError:
+        except ModuleNotFoundError:
             pytest.skip("torch not installed")
 
     def test_invalid_override_raises_value_error(self) -> None:
@@ -36,15 +36,15 @@ class TestGetDevice:
 
             with pytest.raises(ValueError, match="Invalid device"):
                 get_device(override="invalid")  # type: ignore[arg-type]
-        except ImportError:
+        except ModuleNotFoundError:
             pytest.skip("torch not installed")
 
     def test_raises_import_error_without_torch(self) -> None:
-        """Should raise ImportError when torch is not available."""
+        """Should raise ModuleNotFoundError when torch is not available."""
         from unittest.mock import patch
 
         with (
             patch("again_and_again.src.gpu_wizard.TORCH_AVAILABLE", False),
-            pytest.raises(ImportError, match="torch is not available"),
+            pytest.raises(ModuleNotFoundError, match="torch is not available"),
         ):
             get_device()

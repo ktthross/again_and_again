@@ -14,7 +14,7 @@ try:
     from mlflow.tracking import MlflowClient
 
     MLFLOW_AVAILABLE = True
-except ImportError:
+except ModuleNotFoundError:
     set_tracking_uri = None  # type: ignore[assignment]
     MlflowClient = None  # type: ignore[assignment]
     MlflowException = None  # type: ignore[assignment]
@@ -24,7 +24,7 @@ try:
     from dotenv import dotenv_values
 
     DOTENV_AVAILABLE = True
-except ImportError:
+except ModuleNotFoundError:
     dotenv_values = None  # type: ignore[assignment]
     DOTENV_AVAILABLE = False
 
@@ -39,7 +39,7 @@ _MLFLOW_ENV_VARS = [
 def _ensure_mlflow_is_available() -> None:
     """Ensure that mlflow is available."""
     if not MLFLOW_AVAILABLE:
-        raise ImportError(
+        raise ModuleNotFoundError(
             "mlflow is not available. Install with `uv add again-and-again[mlflow]`"
             " or `pip install again-and-again[mlflow]`"
         )
@@ -62,7 +62,7 @@ def load_mlflow_env(dotenv_path: str | pathlib.Path | None = None) -> dict[str, 
         (or None if not present in the file or environment).
 
     Raises:
-        ImportError: If python-dotenv is not installed. Install with
+        ModuleNotFoundError: If python-dotenv is not installed. Install with
             `uv add again-and-again[mlflow]` or `pip install again-and-again[mlflow]`.
 
     Example:
@@ -73,7 +73,7 @@ def load_mlflow_env(dotenv_path: str | pathlib.Path | None = None) -> dict[str, 
         >>> env = load_mlflow_env(".env.prod")
     """
     if not DOTENV_AVAILABLE:
-        raise ImportError(
+        raise ModuleNotFoundError(
             "python-dotenv is not available. Install with `uv add again-and-again[mlflow]`"
             " or `pip install again-and-again[mlflow]`"
         )
@@ -116,7 +116,7 @@ def experiment_exists(
         True if the experiment exists, False if it does not.
 
     Raises:
-        ImportError: If mlflow is not installed. Install with
+        ModuleNotFoundError: If mlflow is not installed. Install with
             `uv add again-and-again[mlflow]` or `pip install again-and-again[mlflow]`.
         ValueError: If neither or both of experiment_name/experiment_id are provided.
         mlflow.exceptions.MlflowException: If the lookup fails for any reason
@@ -162,7 +162,7 @@ def can_connect_to_databricks(tracking_uri: str | None = None) -> bool:
         True if the connection succeeds.
 
     Raises:
-        ImportError: If mlflow is not installed. Install with
+        ModuleNotFoundError: If mlflow is not installed. Install with
             `uv add again-and-again[mlflow]` or `pip install again-and-again[mlflow]`.
         mlflow.exceptions.MlflowException: If the connection fails.
 
