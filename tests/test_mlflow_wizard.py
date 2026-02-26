@@ -133,6 +133,7 @@ class TestLoadMlflowEnv:
         assert set(result.keys()) == {
             "DATABRICKS_HOST",
             "DATABRICKS_TOKEN",
+            "DATABRICKS_SERVERLESS_COMPUTE_ID",
             "MLFLOW_TRACKING_URI",
             "MLFLOW_EXPERIMENT_ID",
         }
