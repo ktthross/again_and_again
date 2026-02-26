@@ -166,12 +166,26 @@ config = load_hydra_config(
 )
 ```
 
+### Databricks Utilities
+
+**Get a Spark session** that works both inside Databricks notebooks and locally via Databricks Connect:
+
+```python
+from again_and_again import get_spark
+
+# Auto-detects environment: Databricks notebook or local with Databricks Connect
+spark = get_spark()
+
+# Use the session
+df = spark.read.table("my_catalog.my_schema.my_table")
+```
+
 ### MLflow Utilities
 
 Load MLflow/Databricks environment variables from a `.env` file:
 
 ```python
-from ts_hadean_zircon import load_mlflow_env
+from again_and_again import load_mlflow_env
 
 # Load from default location
 env = load_mlflow_env()
@@ -185,7 +199,7 @@ env = load_mlflow_env(".env.databricks")
 **Test connectivity** to a Databricks MLflow tracking server:
 
 ```python
-from ts_hadean_zircon import can_connect_to_databricks
+from again_and_again import can_connect_to_databricks
 
 # Uses MLFLOW_TRACKING_URI env var
 connected = can_connect_to_databricks()
@@ -197,13 +211,23 @@ connected = can_connect_to_databricks(tracking_uri="https://my-workspace.azureda
 **Check whether an MLflow experiment exists**:
 
 ```python
-from ts_hadean_zircon import experiment_exists
+from again_and_again import experiment_exists
 
 # Look up by name
 exists = experiment_exists(experiment_name="my-experiment")
 
 # Look up by ID
 exists = experiment_exists(experiment_id="123456789")
+```
+
+### Version
+
+Access the package version at runtime:
+
+```python
+import again_and_again
+
+print(again_and_again.__version__)  # e.g., "0.7.2"
 ```
 
 ## API Reference
@@ -221,9 +245,11 @@ exists = experiment_exists(experiment_id="123456789")
 | `reset_logging()` | Reset logging configuration |
 | `get_the_hydra_config_path()` | Get path to Hydra config directory |
 | `load_hydra_config(config_name, overrides, config_dir)` | Load Hydra config as dictionary |
+| `get_spark()` | Get a Spark session (Databricks notebook or Databricks Connect) |
 | `load_mlflow_env(dotenv_path=None)` | Load MLflow/Databricks env vars from a .env file |
 | `can_connect_to_databricks(tracking_uri=None)` | Test connectivity to a Databricks MLflow server |
 | `experiment_exists(experiment_name=None, experiment_id=None)` | Check whether an MLflow experiment exists |
+| `__version__` | Package version string |
 
 ## Development
 
