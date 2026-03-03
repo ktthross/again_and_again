@@ -78,10 +78,10 @@ def logging_setup(
             logging and redirect it to loguru. This is useful for libraries
             that use the standard logging module. Default is True.
         intercept_loggers: List of specific logger names to intercept.
-            If None, defaults to ["torch", "hydra"] when
+            If None, defaults to ["torch"] when
             intercept_standard_logging is True. To intercept all loggers,
             pass an empty list []. Common logger names: "torch" (PyTorch),
-            "hydra" (Hydra), "transformers" (HuggingFace), "matplotlib",
+            "transformers" (HuggingFace), "matplotlib",
             "PIL" (Pillow).
 
     Raises:
@@ -90,7 +90,7 @@ def logging_setup(
 
     Example:
         >>> from again_and_again import logging_setup
-        >>> # Default: intercept torch and hydra
+        >>> # Default: intercept torch
         >>> logging_setup("logs/app.log", log_level="DEBUG")
         >>> # Intercept specific loggers
         >>> logging_setup(
@@ -152,10 +152,7 @@ def logging_setup(
     # Intercept standard library logging if requested
     if intercept_standard_logging:
         # Set default loggers to intercept if not specified
-        if intercept_loggers is None:
-            loggers_to_intercept = ["torch", "hydra"]
-        else:
-            loggers_to_intercept = intercept_loggers
+        loggers_to_intercept = ["torch"] if intercept_loggers is None else intercept_loggers
 
         # Configure basic logging with InterceptHandler
         logging.basicConfig(handlers=[InterceptHandler()], level=0, force=True)
@@ -190,6 +187,8 @@ def logging_setup(
         "filelock",
         "git.cmd",
         "git.util",
+        "py4j",
+        "py4j.clientserver",
     ]
     for noisy_logger in noisy_loggers:
         logging.getLogger(noisy_logger).setLevel(logging.WARNING)
