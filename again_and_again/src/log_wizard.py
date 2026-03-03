@@ -62,6 +62,7 @@ def logging_setup(
     log_level: str = "INFO",
     intercept_standard_logging: bool = True,
     intercept_loggers: list[str] | None = None,
+    colorize: bool = True,
 ) -> None:
     """
     Set up logging to stdout and a file in an idempotent manner.
@@ -83,6 +84,7 @@ def logging_setup(
             pass an empty list []. Common logger names: "torch" (PyTorch),
             "transformers" (HuggingFace), "matplotlib",
             "PIL" (Pillow).
+        colorize: If True, colorize the output. Default is True.
 
     Raises:
         ModuleNotFoundError: If loguru is not installed. Install with
@@ -122,17 +124,17 @@ def logging_setup(
     logger.remove()
 
     # Add stdout handler with colorized output
-    logger.add(
-        sys.stdout,
-        level=log_level,
-        colorize=True,
-        format=(
+    if colorize:
+        format = (
             "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
             "<level>{level: <8}</level> | "
             "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | "
             "<level>{message}</level>"
-        ),
-    )
+        )
+    else:
+        format = "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} | {message}"
+
+    logger.add(sys.stdout, level=log_level, colorize=colorize, format=format)
 
     # Add file handler with rotation
     if log_file is not None:
