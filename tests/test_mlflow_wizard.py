@@ -120,8 +120,8 @@ class TestLoadMlflowEnv:
         ):
             load_mlflow_env()
 
-    def test_returns_dict_with_all_four_keys(self) -> None:
-        """Returned dict should always contain all four variable names as keys."""
+    def test_returns_dict_with_all_five_keys(self) -> None:
+        """Returned dict should always contain all five variable names as keys."""
         from unittest.mock import patch
 
         with (
@@ -152,13 +152,14 @@ class TestLoadMlflowEnv:
         assert all(v is None for v in result.values())
 
     def test_loads_vars_from_file_into_environment(self) -> None:
-        """Should set the four vars in os.environ from the parsed file values."""
+        """Should set the five vars in os.environ from the parsed file values."""
         import os
         from unittest.mock import patch
 
         file_values = {
             "DATABRICKS_HOST": "https://myworkspace.azuredatabricks.net",
             "DATABRICKS_TOKEN": "dapi123",
+            "DATABRICKS_SERVERLESS_COMPUTE_ID": "serverless-123",
             "MLFLOW_TRACKING_URI": "databricks",
             "MLFLOW_EXPERIMENT_ID": "42",
             "SOME_OTHER_VAR": "should-be-ignored",
@@ -174,6 +175,7 @@ class TestLoadMlflowEnv:
 
         assert result["DATABRICKS_HOST"] == "https://myworkspace.azuredatabricks.net"
         assert result["DATABRICKS_TOKEN"] == "dapi123"
+        assert result["DATABRICKS_SERVERLESS_COMPUTE_ID"] == "serverless-123"
         assert result["MLFLOW_TRACKING_URI"] == "databricks"
         assert result["MLFLOW_EXPERIMENT_ID"] == "42"
 
