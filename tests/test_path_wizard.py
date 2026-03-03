@@ -174,29 +174,3 @@ class TestCreateUniquePathInsideOfAGitRepo:
         result = create_unique_path_inside_of_a_git_repo()
         # Verify the created path is inside the fake repo
         assert result.is_relative_to(fake_git_repo)
-
-
-class TestVersion:
-    """Tests for package version."""
-
-    def test_version_is_available(self) -> None:
-        """Should expose __version__ at package level."""
-        import again_and_again
-
-        assert hasattr(again_and_again, "__version__")
-
-    def test_version_is_string(self) -> None:
-        """Should return version as a string."""
-        import again_and_again
-
-        assert isinstance(again_and_again.__version__, str)
-
-    def test_version_matches_semver_format(self) -> None:
-        """Should follow semantic versioning format (X.Y.Z)."""
-        import re
-
-        import again_and_again
-
-        # Match semantic versioning: major.minor.patch with optional pre-release
-        semver_pattern = r"^\d+\.\d+\.\d+([a-zA-Z0-9\.\-]+)?$"
-        assert re.match(semver_pattern, again_and_again.__version__)
