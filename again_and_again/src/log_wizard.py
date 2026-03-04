@@ -62,6 +62,7 @@ def logging_setup(
     log_level: str = "INFO",
     intercept_standard_logging: bool = True,
     intercept_loggers: list[str] | None = None,
+    colorize: bool = True,
 ) -> None:
     """
     Set up logging to stdout and a file in an idempotent manner.
@@ -78,11 +79,12 @@ def logging_setup(
             logging and redirect it to loguru. This is useful for libraries
             that use the standard logging module. Default is True.
         intercept_loggers: List of specific logger names to intercept.
-            If None, defaults to ["torch", "hydra"] when
+            If None, defaults to ["torch"] when
             intercept_standard_logging is True. To intercept all loggers,
             pass an empty list []. Common logger names: "torch" (PyTorch),
-            "hydra" (Hydra), "transformers" (HuggingFace), "matplotlib",
+            "transformers" (HuggingFace), "matplotlib",
             "PIL" (Pillow).
+        colorize: If True, colorize the output. Default is True.
 
     Raises:
         ModuleNotFoundError: If loguru is not installed. Install with
@@ -90,7 +92,7 @@ def logging_setup(
 
     Example:
         >>> from again_and_again import logging_setup
-        >>> # Default: intercept torch and hydra
+        >>> # Default: intercept torch
         >>> logging_setup("logs/app.log", log_level="DEBUG")
         >>> # Intercept specific loggers
         >>> logging_setup(
@@ -122,17 +124,17 @@ def logging_setup(
     logger.remove()
 
     # Add stdout handler with colorized output
-    logger.add(
-        sys.stdout,
-        level=log_level,
-        colorize=True,
-        format=(
+    if colorize:
+        format = (
             "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
             "<level>{level: <8}</level> | "
             "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | "
             "<level>{message}</level>"
-        ),
-    )
+        )
+    else:
+        format = "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} | {message}"
+
+    logger.add(sys.stdout, level=log_level, colorize=colorize, format=format)
 
     # Add file handler with rotation
     if log_file is not None:
@@ -152,10 +154,7 @@ def logging_setup(
     # Intercept standard library logging if requested
     if intercept_standard_logging:
         # Set default loggers to intercept if not specified
-        if intercept_loggers is None:
-            loggers_to_intercept = ["torch", "hydra"]
-        else:
-            loggers_to_intercept = intercept_loggers
+        loggers_to_intercept = ["torch"] if intercept_loggers is None else intercept_loggers
 
         # Configure basic logging with InterceptHandler
         logging.basicConfig(handlers=[InterceptHandler()], level=0, force=True)
@@ -190,6 +189,8 @@ def logging_setup(
         "filelock",
         "git.cmd",
         "git.util",
+        "py4j",
+        "py4j.clientserver",
     ]
     for noisy_logger in noisy_loggers:
         logging.getLogger(noisy_logger).setLevel(logging.WARNING)

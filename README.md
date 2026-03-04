@@ -23,10 +23,6 @@ For optional features:
 uv add again-and-again[torch]
 # pip install again-and-again[torch]
 
-# Hydra configuration utilities
-uv add again-and-again[hydra]
-# pip install again-and-again[hydra]
-
 # Logging setup with loguru
 uv add again-and-again[logging]
 # pip install again-and-again[logging]
@@ -127,7 +123,7 @@ from loguru import logger
 # Set up logging to stdout and a file
 logging_setup("logs/app.log", log_level="DEBUG")
 
-# Automatically intercepts torch and hydra logging
+# Automatically intercepts torch logging
 logger.info("Application started")
 
 # Intercept specific loggers
@@ -138,32 +134,6 @@ logging_setup(
 
 # Intercept all standard logging
 logging_setup("logs/app.log", intercept_loggers=[])
-```
-
-### Hydra Configuration Utilities
-
-Load Hydra configurations:
-
-```python
-from again_and_again import load_hydra_config, get_the_hydra_config_path
-
-# Get the config directory path
-config_path = get_the_hydra_config_path()  # Returns {repo_root}/conf
-
-# Load a Hydra config as a dictionary
-config = load_hydra_config("train_config")
-
-# Load with overrides
-config = load_hydra_config(
-    "train_config",
-    overrides=["batch_size=32", "learning_rate=0.001"]
-)
-
-# Load from custom directory
-config = load_hydra_config(
-    "my_config",
-    config_dir="/path/to/configs"
-)
 ```
 
 ### Databricks Utilities
@@ -243,8 +213,6 @@ print(again_and_again.__version__)  # e.g., "X.Y.Z"
 | `get_device(override=None)` | Get optimal PyTorch device |
 | `logging_setup(log_file, log_level, intercept_standard_logging, intercept_loggers)` | Configure loguru logging |
 | `reset_logging()` | Reset logging configuration |
-| `get_the_hydra_config_path()` | Get path to Hydra config directory |
-| `load_hydra_config(config_name, overrides, config_dir)` | Load Hydra config as dictionary |
 | `get_spark()` | Get a Spark session (Databricks notebook or Databricks Connect) |
 | `load_mlflow_env(dotenv_path=None)` | Load MLflow/Databricks env vars from a .env file |
 | `can_connect_to_databricks(tracking_uri=None)` | Test connectivity to a Databricks MLflow server |
